@@ -18,3 +18,6 @@ Route::apiResource('currencies', CurrencyController::class)
 
 Route::apiResource('accounts', AccountController::class)
     ->only(['index', 'show']);
+
+Route::apiResource('envelopes', EnvelopeController::class)
+    ->only(['index', 'show']);
