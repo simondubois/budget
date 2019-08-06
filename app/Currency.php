@@ -30,6 +30,14 @@ class Currency extends Model
     public $timestamps = false;
 
     /**
+     * Get the accounts for the currency.
+     */
+    public function accounts()
+    {
+        return $this->hasMany(Account::class);
+    }
+
+    /**
      * Get the rates for the currency.
      */
     public function rates()
