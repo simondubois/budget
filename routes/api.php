@@ -15,3 +15,6 @@ use Illuminate\Http\Request;
 
 Route::apiResource('currencies', CurrencyController::class)
     ->only(['index', 'show']);
+
+Route::apiResource('accounts', AccountController::class)
+    ->only(['index', 'show']);
