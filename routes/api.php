@@ -21,3 +21,6 @@ Route::apiResource('accounts', AccountController::class)
 
 Route::apiResource('envelopes', EnvelopeController::class)
     ->only(['index', 'show']);
+
+Route::apiResource('operations', OperationController::class)
+    ->only(['index', 'show']);

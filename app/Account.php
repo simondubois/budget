@@ -30,4 +30,50 @@ class Account extends Model
      * @var array
      */
     protected $fillable = ['currency_iso', 'name', 'bank'];
+
+    /**
+     * Get the direct income operations for the account.
+     */
+    public function directIncomes()
+    {
+        return $this->hasMany(Operation::class, 'to_account_id')
+            ->whereNull('from_account_id')
+            ->whereNull('to_envelope_id');
+    }
+
+    /**
+     * Get the expense operations for the account.
+     */
+    public function expenses()
+    {
+        return $this->hasMany(Operation::class, 'from_account_id')
+            ->whereNull('to_account_id');
+    }
+
+    /**
+     * Get the income operations for the account.
+     */
+    public function incomes()
+    {
+        return $this->hasMany(Operation::class, 'to_account_id')
+            ->whereNull('from_account_id');
+    }
+
+    /**
+     * Get the incoming transfer operations for the account.
+     */
+    public function incomingTransfers()
+    {
+        return $this->hasMany(Operation::class, 'to_account_id')
+            ->whereNotNull('from_account_id');
+    }
+
+    /**
+     * Get the outgoing transfer operations for the account.
+     */
+    public function outgoingTransfers()
+    {
+        return $this->hasMany(Operation::class, 'from_account_id')
+            ->whereNotNull('to_account_id');
+    }
 }
