@@ -30,6 +30,14 @@ class Currency extends Model
     public $timestamps = false;
 
     /**
+     * Get the rates for the currency.
+     */
+    public function rates()
+    {
+        return $this->hasMany(Rate::class, 'base_currency_iso');
+    }
+
+    /**
      * Get one or all currencies from cache.
      *
      * @param string $isoCode

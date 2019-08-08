@@ -14,3 +14,9 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('fetch-rates', function () {
+    $output = new Symfony\Component\Console\Output\BufferedOutput();
+    Artisan::call('rate:fetch', [], $output);
+    return nl2br($output->fetch());
+});
