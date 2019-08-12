@@ -11,5 +11,11 @@ const mix = require('laravel-mix');
  |
  */
 
+mix.webpackConfig({
+    plugins: [
+        new (require("webpack").ContextReplacementPlugin)(/moment[/\\]locale$/, /en|fr/),
+    ],
+});
+
 mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css');
