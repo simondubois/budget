@@ -55,6 +55,10 @@ window.app = new Vue({
                 namespaced: true,
                 ...require('./stores/currency.js'),
             },
+            envelope: {
+                namespaced: true,
+                ...require('./stores/envelope.js'),
+            },
             state: {
                 namespaced: true,
                 ...require('./stores/state.js'),
@@ -65,5 +69,6 @@ window.app = new Vue({
         require('moment').locale(this.$i18n.locale);
         this.$store.dispatch('account/refresh');
         this.$store.dispatch('currency/refresh');
+        this.$store.dispatch('envelope/refresh');
     },
 });

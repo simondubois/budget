@@ -26,6 +26,15 @@ export default [
         ],
     },
     {
+        path: '/envelopes',
+        components: {
+            default: require('./components/EnvelopeIndex.vue').default,
+            navbar: require('./components/EnvelopeNavbar.vue').default,
+        },
+        children: [
+        ],
+    },
+    {
         path: '*',
         redirect: '/',
     },
