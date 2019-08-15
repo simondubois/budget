@@ -20,6 +20,13 @@ export default {
         },
     },
 
+    envelope: {
+        name: 'Enveloppe',
+        all: {
+            name: 'Toutes les enveloppes',
+        },
+    },
+
     icons: {
         link: 'Rechercher une icône (en Anglais)',
         categories: {
