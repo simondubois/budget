@@ -17,6 +17,12 @@ export default [
                 component: require('./components/AccountAll.vue').default,
                 meta: { showCurrencySelector: true },
             },
+            {
+                path: ':accountId',
+                name: 'account-show',
+                component: require('./components/AccountShow.vue').default,
+                meta: { showCurrencySelector: true },
+            },
         ],
     },
     {
