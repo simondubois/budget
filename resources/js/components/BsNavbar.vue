@@ -31,6 +31,18 @@
                     </router-link>
                 </li>
 
+                <li class="nav-item">
+                    <router-link
+                        :to="{ name: 'envelope-all' }"
+                        class="nav-link"
+                    >
+                        <fontawesome-icon icon="envelope" />
+                        <span class="d-none d-sm-inline">
+                            {{ $t('envelope.name') }}
+                        </span>
+                    </router-link>
+                </li>
+
                 <li class="nav-item flex-grow-1" />
 
                 <li
