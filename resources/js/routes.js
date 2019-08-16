@@ -2,7 +2,7 @@
 export default [
     {
         path: '/',
-        redirect: { name: 'account-all' },
+        redirect: { name: 'envelope-all' },
     },
     {
         path: '/accounts',
@@ -32,6 +32,12 @@ export default [
             navbar: require('./components/EnvelopeNavbar.vue').default,
         },
         children: [
+            {
+                path: '/',
+                name: 'envelope-all',
+                component: require('./components/EnvelopeAll.vue').default,
+                meta: { showCurrencySelector: true },
+            },
         ],
     },
     {
