@@ -38,6 +38,12 @@ export default [
                 component: require('./components/EnvelopeAll.vue').default,
                 meta: { showCurrencySelector: true },
             },
+            {
+                path: ':envelopeId',
+                name: 'envelope-show',
+                component: require('./components/EnvelopeShow.vue').default,
+                meta: { showCurrencySelector: true },
+            },
         ],
     },
     {
