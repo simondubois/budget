@@ -22,8 +22,19 @@ export default {
 
     envelope: {
         name: 'Envelopes',
+        attributes: {
+            allocations: 'Allocations',
+            cumulatedBalance: 'Cumulated balance',
+            expenses: 'Expenses',
+            incomes: 'Incomes',
+            monthlyBalance: 'Monthly balance',
+        },
         all: {
             name: 'All envelopes',
+            distribution: 'Distribution',
+        },
+        figures: {
+            name: 'Resultat {date}',
         },
     },
 
