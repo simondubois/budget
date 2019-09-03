@@ -26,6 +26,17 @@
                     {{ cumulatedBalanceText }}
                 </div>
 
+                <template slot="body">
+                    <history-nav
+                        class="mb-2"
+                        entity="account"
+                    />
+                    <history-chart
+                        entity="account"
+                        :fields="['cumulatedBalance', 'cumulatedSavings']"
+                    />
+                </template>
+
             </bs-card>
         </div>
 
@@ -44,6 +55,17 @@
                 >
                     {{ monthlyBalanceText }}
                 </div>
+
+                <template slot="body">
+                    <history-nav
+                        class="mb-2"
+                        entity="account"
+                    />
+                    <history-chart
+                        entity="account"
+                        :fields="['allocations', 'expenses', 'incomes', 'periodBalance', 'periodSavings']"
+                    />
+                </template>
 
             </bs-card>
         </div>
@@ -80,6 +102,12 @@
             hasAccounts: vue => vue.$store.getters['account/all'].length,
             monthlyBalanceContext: vue => vue.$store.getters['account/monthlyBalance'].getContext(vue.currency),
             monthlyBalanceText: vue => vue.$store.getters['account/monthlyBalance'].getText(vue.currency),
+        },
+        created() {
+            this.$store.dispatch('accountHistory/refresh');
+        },
+        destroyed() {
+            this.$store.dispatch('accountHistory/reset');
         },
     };
 
