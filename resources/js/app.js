@@ -51,6 +51,10 @@ window.app = new Vue({
                 namespaced: true,
                 ...require('./stores/account.js'),
             },
+            accountHistory: {
+                namespaced: true,
+                ...require('./stores/history.js').default('accounts'),
+            },
             currency: {
                 namespaced: true,
                 ...require('./stores/currency.js'),

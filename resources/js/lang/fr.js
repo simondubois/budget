@@ -11,8 +11,14 @@ export default {
     account: {
         name: 'Comptes',
         attributes: {
+            allocations: 'Allocations',
             cumulatedBalance: 'Solde cumulé',
+            cumulatedSavings: 'Épargne cumulée',
+            expenses: 'Dépenses',
+            incomes: 'Revenus',
             monthlyBalance: 'Solde mensuel',
+            periodBalance: 'Solde',
+            periodSavings: 'Épargne',
         },
         all: {
             name: 'Tous les comptes',
@@ -35,6 +41,14 @@ export default {
         },
         figures: {
             name: 'Résultat {date}',
+        },
+    },
+
+    history: {
+        period: {
+            latest: 'Récent',
+            monthly: 'Mensuel',
+            yearly: 'Annuel',
         },
     },
 
