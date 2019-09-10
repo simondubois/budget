@@ -29,6 +29,17 @@
                     {{ cumulatedBalanceText }}
                 </div>
 
+                <template slot="body">
+                    <history-nav
+                        class="mb-2"
+                        entity="envelope"
+                    />
+                    <history-chart
+                        entity="envelope"
+                        :fields="['allocations', 'cumulatedBalance', 'expenses', 'incomes', 'periodBalance']"
+                    />
+                </template>
+
             </bs-card>
         </div>
 
@@ -75,7 +86,10 @@
             cumulatedBalanceText: vue => vue.cumulatedBalance.getText(vue.currency),
             currency: vue => vue.$store.getters['currency/selected'],
             currentMonth: () => require('moment')().format('MMMM YYYY'),
-            envelope: vue => vue.$store.getters['envelope/find'](vue.id) || {},
+            envelope: vue => {
+                vue.$store.dispatch('envelopeHistory/refresh', vue.id);
+                return vue.$store.getters['envelope/find'](vue.id) || {};
+            },
             icon: vue => vue.envelope.icon,
             id: vue => parseInt(vue.$route.params.envelopeId),
             monthlyAllocations: vue => vue.envelope.monthlyAllocations || vue.makeMoney(),
@@ -86,6 +100,9 @@
             monthlyIncomes: vue => vue.envelope.monthlyIncomes || vue.makeMoney(),
             name: vue => vue.envelope.name,
             previousCumulatedBalance: vue => vue.envelope.previousCumulatedBalance || vue.makeMoney(),
+        },
+        destroyed() {
+            this.$store.dispatch('envelopeHistory/reset');
         },
     };
 
