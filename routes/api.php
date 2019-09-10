@@ -23,6 +23,10 @@ Route::apiResource('accounts/history', AccountHistoryController::class)
 Route::apiResource('accounts', AccountController::class)
     ->only(['index', 'show']);
 
+Route::apiResource('envelopes/history', EnvelopeHistoryController::class)
+    ->parameters(['history' => 'envelope'])
+    ->only(['index', 'show']);
+
 Route::apiResource('envelopes', EnvelopeController::class)
     ->only(['index', 'show']);
 
