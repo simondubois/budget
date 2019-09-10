@@ -27,6 +27,17 @@
                     {{ cumulatedBalanceText }}
                 </div>
 
+                <template slot="body">
+                    <history-nav
+                        class="mb-2"
+                        entity="envelope"
+                    />
+                    <history-chart
+                        entity="envelope"
+                        :fields="['allocations', 'cumulatedBalance', 'expenses', 'incomes', 'periodBalance']"
+                    />
+                </template>
+
             </bs-card>
 
             <bs-card class="mb-3">
@@ -93,6 +104,12 @@
             monthlyExpenses: vue => vue.$store.getters['envelope/monthlyExpenses'],
             monthlyIncomes: vue => vue.$store.getters['envelope/monthlyIncomes'],
             previousCumulatedBalance: vue => vue.$store.getters['envelope/previousCumulatedBalance'],
+        },
+        created() {
+            this.$store.dispatch('envelopeHistory/refresh');
+        },
+        destroyed() {
+            this.$store.dispatch('envelopeHistory/reset');
         },
     };
 
