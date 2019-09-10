@@ -34,6 +34,7 @@ export default {
             expenses: 'Expenses',
             incomes: 'Incomes',
             monthlyBalance: 'Monthly balance',
+            periodBalance: 'Balance',
         },
         all: {
             name: 'All envelopes',

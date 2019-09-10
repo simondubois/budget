@@ -34,6 +34,7 @@ export default {
             expenses: 'Dépenses',
             incomes: 'Revenus',
             monthlyBalance: 'Solde mensuel',
+            periodBalance: 'Solde',
         },
         all: {
             name: 'Toutes les enveloppes',

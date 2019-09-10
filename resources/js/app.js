@@ -63,6 +63,10 @@ window.app = new Vue({
                 namespaced: true,
                 ...require('./stores/envelope.js'),
             },
+            envelopeHistory: {
+                namespaced: true,
+                ...require('./stores/history.js').default('envelopes'),
+            },
             state: {
                 namespaced: true,
                 ...require('./stores/state.js'),
