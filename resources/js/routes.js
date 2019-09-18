@@ -16,6 +16,13 @@ export default [
                 name: 'account-all',
                 component: require('./components/AccountAll.vue').default,
                 meta: { showCurrencySelector: true },
+                children: [
+                    {
+                        path: 'new',
+                        name: 'account-create',
+                        component: require('./components/AccountCreate.vue').default,
+                    },
+                ],
             },
             {
                 path: ':accountId',
