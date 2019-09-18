@@ -30,6 +30,9 @@ export default {
         create: {
             name: 'New account',
         },
+        edit: {
+            name: 'Edit account',
+        },
     },
 
     envelope: {

@@ -29,6 +29,13 @@ export default [
                 name: 'account-show',
                 component: require('./components/AccountShow.vue').default,
                 meta: { showCurrencySelector: true },
+                children: [
+                    {
+                        path: 'edit',
+                        name: 'account-edit',
+                        component: require('./components/AccountEdit.vue').default,
+                    },
+                ],
             },
         ],
     },
