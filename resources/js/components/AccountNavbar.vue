@@ -24,6 +24,21 @@
             />
         </li>
 
+        <li class="nav-item">
+            <router-link
+                :to="{ name: 'account-create' }"
+                class="nav-link d-flex align-items-baseline"
+            >
+
+                <div class="flex-fill mr-1 text-truncate">
+                    {{ $t('account.create.name') }}
+                </div>
+
+                <fontawesome-icon icon="create" />
+
+            </router-link>
+        </li>
+
     </ul>
 
 </template>

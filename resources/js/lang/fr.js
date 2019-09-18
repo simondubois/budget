@@ -12,17 +12,23 @@ export default {
         name: 'Comptes',
         attributes: {
             allocations: 'Allocations',
+            bank: 'Nom de la banque',
             cumulatedBalance: 'Solde cumulé',
             cumulatedSavings: 'Épargne cumulée',
+            currencyIso: 'Devise du compte',
             expenses: 'Dépenses',
             incomes: 'Revenus',
             monthlyBalance: 'Solde mensuel',
+            name: 'Nom du compte',
             periodBalance: 'Solde',
             periodSavings: 'Épargne',
         },
         all: {
             name: 'Tous les comptes',
             distribution: 'Répartition',
+        },
+        create: {
+            name: 'Nouveau compte',
         },
     },
 
