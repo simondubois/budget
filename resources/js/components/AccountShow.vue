@@ -9,8 +9,19 @@
                 <div class="d-flex flex-wrap align-items-end">
 
                     <div class="mr-1">
+
                         <fontawesome-icon icon="account" />
+
                         {{ name }}
+
+                        <router-link
+                            :title="$t('account.edit.name', { accountId: id })"
+                            :to="{ name: 'account-edit' }"
+                            class="ml-1 btn btn-secondary btn-sm"
+                        >
+                            <fontawesome-icon icon="edit" />
+                        </router-link>
+
                     </div>
 
                     <div class="flex-fill text-right">
@@ -87,6 +98,14 @@
 
             </bs-card>
         </div>
+
+        <transition
+            mode="out-in"
+            name="fade"
+            appear
+        >
+            <router-view />
+        </transition>
 
     </div>
 
