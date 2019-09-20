@@ -28,7 +28,7 @@ Route::apiResource('envelopes/history', EnvelopeHistoryController::class)
     ->only(['index', 'show']);
 
 Route::apiResource('envelopes', EnvelopeController::class)
-    ->only(['index', 'show']);
+    ->only(['index', 'store', 'show', 'update']);
 
 Route::apiResource('operations', OperationController::class)
     ->only(['index', 'show']);
