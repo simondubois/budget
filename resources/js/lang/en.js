@@ -40,14 +40,22 @@ export default {
         attributes: {
             allocations: 'Allocations',
             cumulatedBalance: 'Cumulated balance',
+            defaultAllocation: 'Default monthly allocation',
+            defaultAllocationAmount: 'Amount',
+            defaultAllocationCurrencyIso: 'Currency',
             expenses: 'Expenses',
+            icon: 'Envelope icon',
             incomes: 'Incomes',
             monthlyBalance: 'Monthly balance',
+            name: 'Envelope name',
             periodBalance: 'Balance',
         },
         all: {
             name: 'All envelopes',
             distribution: 'Distribution',
+        },
+        create: {
+            name: 'New envelope',
         },
         figures: {
             name: 'Resultat {date}',

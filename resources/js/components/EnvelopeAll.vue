@@ -81,6 +81,14 @@
             </bs-card>
         </div>
 
+        <transition
+            mode="out-in"
+            name="fade"
+            appear
+        >
+            <router-view />
+        </transition>
+
     </div>
 
 </template>
