@@ -10,6 +10,14 @@
 
                 {{ name }}
 
+                <router-link
+                    :title="$t('envelope.edit.name', { envelopeId: id })"
+                    :to="{ name: 'envelope-edit' }"
+                    class="ml-1 btn btn-secondary btn-sm"
+                >
+                    <fontawesome-icon icon="edit" />
+                </router-link>
+
             </h1>
         </div>
 
@@ -70,6 +78,14 @@
 
             </bs-card>
         </div>
+
+        <transition
+            mode="out-in"
+            name="fade"
+            appear
+        >
+            <router-view />
+        </transition>
 
     </div>
 
