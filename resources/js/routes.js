@@ -51,6 +51,13 @@ export default [
                 name: 'envelope-all',
                 component: require('./components/EnvelopeAll.vue').default,
                 meta: { showCurrencySelector: true },
+                children: [
+                    {
+                        path: 'new',
+                        name: 'envelope-create',
+                        component: require('./components/EnvelopeCreate.vue').default,
+                    },
+                ],
             },
             {
                 path: ':envelopeId',

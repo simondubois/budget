@@ -41,6 +41,21 @@
             />
         </li>
 
+        <li class="nav-item">
+            <router-link
+                :to="{ name: 'envelope-create' }"
+                class="nav-link d-flex align-items-baseline"
+            >
+
+                <div class="flex-fill mr-1 text-truncate">
+                    {{ $t('envelope.create.name') }}
+                </div>
+
+                <fontawesome-icon icon="create" />
+
+            </router-link>
+        </li>
+
     </ul>
 
 </template>
