@@ -64,6 +64,13 @@ export default [
                 name: 'envelope-show',
                 component: require('./components/EnvelopeShow.vue').default,
                 meta: { showCurrencySelector: true },
+                children: [
+                    {
+                        path: 'edit',
+                        name: 'envelope-edit',
+                        component: require('./components/EnvelopeEdit.vue').default,
+                    },
+                ],
             },
         ],
     },
