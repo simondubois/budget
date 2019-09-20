@@ -57,6 +57,9 @@ export default {
         create: {
             name: 'New envelope',
         },
+        edit: {
+            name: 'Edit enveloppe',
+        },
         figures: {
             name: 'Resultat {date}',
         },
