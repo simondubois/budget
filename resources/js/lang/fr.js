@@ -63,6 +63,11 @@ export default {
         figures: {
             name: 'Résultat {date}',
         },
+        operations: {
+            name: 'Opérations pour {date}',
+            more: 'Toutes les opérations',
+            empty: 'Cette envelope n\'a pas encore d\'opération ce mois-ci.',
+        },
     },
 
     history: {
@@ -150,6 +155,26 @@ export default {
             weather: 'Météo',
             winter: 'Hiver',
             writing: 'Écriture',
+        },
+    },
+
+    operation: {
+        name: 'Opérations',
+        all: {
+            empty: 'Aucun opération ne correspond aux filtres de recherche.',
+            paginationAll: 'Tout afficher',
+            paginationMore: 'Afficher davantage',
+            paginationTitle: '{per_page} opérations affichées sur {total}',
+        },
+        filter: {
+            allAccounts: 'Tous les comptes',
+            allEnvelopes: 'Toutes les envelopes',
+        },
+        types: {
+            allocation: 'Allocation mensuelle',
+            expense: 'Dépense',
+            income: 'Revenu',
+            transfer: 'Virement bancaire',
         },
     },
 
