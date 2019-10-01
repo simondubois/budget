@@ -43,6 +43,18 @@
                     </router-link>
                 </li>
 
+                <li class="nav-item">
+                    <router-link
+                        :to="{ name: 'operation-all', query: { filter_types: defaultOperationTypes } }"
+                        class="nav-link"
+                    >
+                        <fontawesome-icon icon="operation" />
+                        <span class="d-none d-sm-inline">
+                            {{ $t('operation.name') }}
+                        </span>
+                    </router-link>
+                </li>
+
                 <li class="nav-item flex-grow-1" />
 
                 <li
@@ -89,6 +101,7 @@
         }),
         computed: {
             currencies: vue => vue.$route.meta.showCurrencySelector ? vue.$store.getters['currency/all'] : [],
+            defaultOperationTypes: () => JSON.stringify(['expense', 'income', 'transfer']),
             loading: vue => vue.$store.getters['state/loading'],
         },
         watch: {
