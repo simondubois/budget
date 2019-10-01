@@ -75,6 +75,14 @@ export default [
         ],
     },
     {
+        path: '/operations',
+        name: 'operation-all',
+        components: {
+            default: require('./components/OperationAll.vue').default,
+            navbar: require('./components/OperationNavbar.vue').default,
+        },
+    },
+    {
         path: '*',
         redirect: '/',
     },

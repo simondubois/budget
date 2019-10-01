@@ -79,6 +79,40 @@
             </bs-card>
         </div>
 
+        <div class="col-xl-12">
+            <bs-card class="mb-3">
+
+                <template slot="header-left">
+                    <fontawesome-icon icon="operation" />
+                    {{ $t('envelope.operations.name', { date: currentMonth }) }}
+                </template>
+
+                <router-link
+                    slot="header-right"
+                    :to="{ name: 'operation-all', query: { filter_envelope_id: id } }"
+                    class="btn btn-secondary btn-sm"
+                >
+                    {{ $t('envelope.operations.more') }}
+                </router-link>
+
+                <operation-list
+                    slot="body"
+                    :envelope-id="id"
+                    :empty-text="$t('envelope.operations.empty')"
+                    :min-date="firstOfCurrentMonth"
+                >
+                    <template slot-scope="{ operations }">
+                        <operation-show
+                            v-for="operation in operations"
+                            :key="operation.id"
+                            :operation="operation"
+                        />
+                    </template>
+                </operation-list>
+
+            </bs-card>
+        </div>
+
         <transition
             mode="out-in"
             name="fade"
@@ -106,6 +140,7 @@
                 vue.$store.dispatch('envelopeHistory/refresh', vue.id);
                 return vue.$store.getters['envelope/find'](vue.id) || {};
             },
+            firstOfCurrentMonth: () => require('moment')().startOf('month').format('YYYY-MM-DD'),
             icon: vue => vue.envelope.icon,
             id: vue => parseInt(vue.$route.params.envelopeId),
             monthlyAllocations: vue => vue.envelope.monthlyAllocations || vue.makeMoney(),

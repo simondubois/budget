@@ -63,6 +63,11 @@ export default {
         figures: {
             name: 'Resultat {date}',
         },
+        operations: {
+            name: 'Operations for {date}',
+            more: 'All operations',
+            empty: 'This envelope has no operation for this month yet.',
+        },
     },
 
     history: {
@@ -150,6 +155,26 @@ export default {
             weather: 'Weather',
             winter: 'Winter',
             writing: 'Writing',
+        },
+    },
+
+    operation: {
+        name: 'Operations',
+        all: {
+            empty: 'No operation matches the search filters.',
+            paginationAll: 'Show all',
+            paginationMore: 'Show more',
+            paginationTitle: 'Showing {per_page} of {total} operations',
+        },
+        filter: {
+            allAccounts: 'All accounts',
+            allEnvelopes: 'All envelopes',
+        },
+        types: {
+            allocation: 'Monthly allocation',
+            expense: 'Expense',
+            income: 'Income',
+            transfer: 'Bank transfer',
         },
     },
 
