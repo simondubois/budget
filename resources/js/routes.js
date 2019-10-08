@@ -81,6 +81,13 @@ export default [
             default: require('./components/OperationAll.vue').default,
             navbar: require('./components/OperationNavbar.vue').default,
         },
+        children: [
+            {
+                path: 'new',
+                name: 'operation-create',
+                component: require('./components/OperationCreate.vue').default,
+            },
+        ],
     },
     {
         path: '*',

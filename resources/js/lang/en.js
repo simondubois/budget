@@ -166,6 +166,19 @@ export default {
             paginationMore: 'Show more',
             paginationTitle: 'Showing {per_page} of {total} operations',
         },
+        attributes: {
+            amount: 'Amount',
+            date: 'Date',
+            fromAccountId: 'Account in debt',
+            fromEnvelopeId: 'Envelope in debt',
+            name: 'Label',
+            toAccountId: 'Account in credit',
+            toEnvelopeId: 'Envelope in credit',
+        },
+        create: {
+            name: 'New operation',
+            emptyToEnvelopeId: 'Not allocated',
+        },
         filter: {
             allAccounts: 'All accounts',
             allEnvelopes: 'All envelopes',

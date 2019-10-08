@@ -166,6 +166,19 @@ export default {
             paginationMore: 'Afficher davantage',
             paginationTitle: '{per_page} opérations affichées sur {total}',
         },
+        attributes: {
+            amount: 'Montant',
+            date: 'Date',
+            fromAccountId: 'Compte débiteur',
+            fromEnvelopeId: 'Envelope débitrice',
+            name: 'Intitulé',
+            toAccountId: 'Compte créditeur',
+            toEnvelopeId: 'Envelope créditrice',
+        },
+        create: {
+            name: 'Nouvelle opération',
+            emptyToEnvelopeId: 'Non alloué',
+        },
         filter: {
             allAccounts: 'Tous les comptes',
             allEnvelopes: 'Toutes les envelopes',
