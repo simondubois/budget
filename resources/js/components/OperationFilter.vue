@@ -39,6 +39,14 @@
                 <fontawesome-icon icon="reset" />
             </router-link>
 
+            <router-link
+                :title="$t('operation.create.name')"
+                :to="{ name: 'operation-create', query: $route.query }"
+                class="btn btn-primary ml-4"
+            >
+                <fontawesome-icon icon="create" />
+            </router-link>
+
         </div>
 
     </div>
