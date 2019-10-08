@@ -60,10 +60,15 @@
         },
         methods: {
             select(type) {
-                this.$emit('input', [...this.value, type]);
+                if (this.multiple) {
+                    return this.$emit('input', [...this.value, type]);
+                }
+                this.$emit('input', type);
             },
             unselect(type) {
-                this.$emit('input', this.value.filter(t => t !== type));
+                if (this.multiple) {
+                    return this.$emit('input', this.value.filter(t => t !== type));
+                }
             },
         },
     };
