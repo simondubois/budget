@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreOperationRequest;
+use App\Http\Requests\UpdateOperationRequest;
 use App\Http\Resources\OperationResource;
 use App\Operation;
 use Carbon\Carbon;
@@ -63,6 +65,19 @@ class OperationController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     *
+     * @param  \App\Http\Requests\StoreOperationRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(StoreOperationRequest $request)
+    {
+        return new OperationResource(
+            Operation::create($request->validated())
+        );
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  Operation  $operation
@@ -73,5 +88,32 @@ class OperationController extends Controller
         return new OperationResource(
             $operation
         );
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \App\Http\Requests\UpdateOperationRequest  $request
+     * @param  \App\Operation
+     * @return \Illuminate\Http\Response
+     */
+    public function update(UpdateOperationRequest $request, Operation $operation)
+    {
+        return new OperationResource(
+            tap($operation)->update($request->validated())
+        );
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Operation
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Operation $operation)
+    {
+        $operation->delete();
+
+        return response()->noContent();
     }
 }

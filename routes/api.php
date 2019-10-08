@@ -31,4 +31,4 @@ Route::apiResource('envelopes', EnvelopeController::class)
     ->only(['index', 'store', 'show', 'update']);
 
 Route::apiResource('operations', OperationController::class)
-    ->only(['index', 'show']);
+    ->only(['index', 'store', 'show', 'update', 'destroy']);
