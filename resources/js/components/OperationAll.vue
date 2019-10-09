@@ -22,7 +22,7 @@
                         <tr class="text-center">
                             <th
                                 class="position-sticky bg-light text-muted border-0"
-                                colspan="5"
+                                colspan="6"
                             >
                                 <h2 class="mt-4">
                                     {{ formatMonth(timestamp) }}
@@ -41,6 +41,7 @@
                             v-for="operation in operationsInMonth"
                             :key="operation.id"
                             :operation="operation"
+                            show-edit-button
                             show-envelope
                         />
                     </transition-group>

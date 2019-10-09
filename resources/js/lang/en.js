@@ -179,6 +179,10 @@ export default {
             name: 'New operation',
             emptyToEnvelopeId: 'Not allocated',
         },
+        edit: {
+            name: 'Edit operation',
+            emptyToEnvelopeId: 'Not allocated',
+        },
         filter: {
             allAccounts: 'All accounts',
             allEnvelopes: 'All envelopes',
