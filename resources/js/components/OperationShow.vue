@@ -74,6 +74,22 @@
             />
         </td>
 
+        <td
+            v-if="showEditButton"
+            class="align-middle"
+        >
+            <div class="btn-group">
+                <router-link
+                    v-if="editRoute"
+                    :title="$t('operation.edit.name')"
+                    :to="editRoute"
+                    class="btn btn-primary btn-sm"
+                >
+                    <fontawesome-icon icon="edit" />
+                </router-link>
+            </div>
+        </td>
+
     </tr>
 
 </template>
@@ -92,6 +108,10 @@
                 type: Boolean,
                 default: false,
             },
+            showEditButton: {
+                type: Boolean,
+                default: false,
+            },
         },
         computed: {
             amount: vue => {
@@ -102,6 +122,11 @@
             },
             currency: vue => vue.operation.currency,
             date: vue => vue.operation.date.format('L'),
+            editRoute: vue => vue.type === 'allocation' ? null : ({
+                name: 'operation-edit',
+                params: { operationId: vue.operation.id },
+                query: vue.$route.query,
+            }),
             envelope: vue =>  vue.showEnvelope ? vue.originEnvelope || vue.recipientEnvelope : null,
             iconClass: vue => ({
                 'text-danger': vue.type === 'expense',

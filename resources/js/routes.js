@@ -87,6 +87,11 @@ export default [
                 name: 'operation-create',
                 component: require('./components/OperationCreate.vue').default,
             },
+            {
+                path: ':operationId/edit',
+                name: 'operation-edit',
+                component: require('./components/OperationEdit.vue').default,
+            },
         ],
     },
     {
