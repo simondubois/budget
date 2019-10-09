@@ -221,6 +221,17 @@
             </div>
 
             <button
+                slot="footer-left"
+                :class="confirming ? 'btn-danger' : 'btn-warning'"
+                class="btn"
+                type="button"
+                @click="confirming ? deleteOperation() : confirming = true"
+            >
+                <fontawesome-icon :icon="confirming ? 'valid' : 'delete'" />
+                {{ confirming ? $t('actions.confirm') : $t('actions.delete') }}
+            </button>
+
+            <button
                 slot="footer-right"
                 class="btn btn-primary"
                 type="submit"
@@ -241,6 +252,7 @@
 
     export default {
         data: () => ({
+            confirming: false,
             operation: {
                 type: '',
                 from_account_id: '',
@@ -279,6 +291,16 @@
             },
         },
         methods: {
+            deleteOperation() {
+                require('axios')
+                    .delete('api/operations/' + this.id)
+                    .then(() => {
+                        this.$store.dispatch('account/refresh');
+                        this.$store.dispatch('envelope/refresh');
+                        this.$emit('operation:refresh');
+                        this.$router.push(this.closeRoute);
+                    });
+            },
             submit() {
                 require('axios')
                     .put('api/operations/' + this.id, {
