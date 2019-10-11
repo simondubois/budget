@@ -95,6 +95,11 @@ export default [
         ],
     },
     {
+        path: '/allocations',
+        name: 'allocation-all',
+        components: { default: require('./components/AllocationAll.vue').default },
+    },
+    {
         path: '*',
         redirect: '/',
     },

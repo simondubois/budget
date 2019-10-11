@@ -35,6 +35,10 @@ export default {
         },
     },
 
+    allocation: {
+        name: 'Allocations',
+    },
+
     envelope: {
         name: 'Envelopes',
         attributes: {
