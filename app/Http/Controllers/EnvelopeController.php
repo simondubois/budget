@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Envelope;
+use App\Http\Resources\EnvelopeCollection;
 use App\Http\Resources\EnvelopeResource;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,7 @@ class EnvelopeController extends Controller
      */
     public function index()
     {
-        return EnvelopeResource::collection(
+        return new EnvelopeCollection(
             Envelope::orderBy('name')->get()
         );
     }
