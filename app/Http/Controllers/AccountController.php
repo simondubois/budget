@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Account;
+use App\Http\Resources\AccountCollection;
 use App\Http\Resources\AccountResource;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,7 @@ class AccountController extends Controller
      */
     public function index()
     {
-        return AccountResource::collection(
+        return new AccountCollection(
             Account::orderBy('name')->get()
         );
     }
