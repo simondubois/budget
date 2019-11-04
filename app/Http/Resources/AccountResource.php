@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class AccountResource extends JsonResource
@@ -20,6 +21,12 @@ class AccountResource extends JsonResource
             'name' => $this->name,
             'bank' => $this->bank,
             'currency' => new CurrencyResource($this->cached_currency),
+            'cumulated_balance' => new MoneyResource(
+                $this->compute('balance', Carbon::minValue(), Carbon::today())
+            ),
+            'monthly_balance' => new MoneyResource(
+                $this->compute('balance', Carbon::today()->startOfMonth(), Carbon::today())
+            ),
         ];
     }
 }
