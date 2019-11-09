@@ -11,6 +11,12 @@ export default [
             navbar: require('./components/AccountNavbar.vue').default,
         },
         children: [
+            {
+                path: '/',
+                name: 'account-all',
+                component: require('./components/AccountAll.vue').default,
+                meta: { showCurrencySelector: true },
+            },
         ],
     },
     {
