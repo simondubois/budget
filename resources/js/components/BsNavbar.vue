@@ -19,6 +19,18 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <router-link
+                        :to="{ name: 'account-all' }"
+                        class="nav-link"
+                    >
+                        <fontawesome-icon icon="account" />
+                        <span class="d-none d-sm-inline">
+                            {{ $t('account.name') }}
+                        </span>
+                    </router-link>
+                </li>
+
                 <li class="nav-item flex-grow-1" />
 
                 <li
