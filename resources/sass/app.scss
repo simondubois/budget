@@ -1,8 +1,20 @@
-// Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
 
-// Variables
-@import 'variables';
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/solid';
 
-// Bootstrap
+@import '~bootswatch/dist/lumen/variables';
 @import '~bootstrap/scss/bootstrap';
+@import '~bootswatch/dist/lumen/bootswatch';
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}
+
+.input-group.is-invalid {
+    ~ .invalid-feedback {
+        display: block;
+    }
+}

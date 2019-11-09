@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::view('/', 'home');
 
 Route::get('fetch-rates', function () {
     $output = new Symfony\Component\Console\Output\BufferedOutput();

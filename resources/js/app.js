@@ -1,32 +1,64 @@
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
 
-require('./bootstrap');
+require('axios').defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-window.Vue = require('vue');
+require('axios').interceptors.request.use(function (config) {
+    config.headers['X-Expect-Language'] = window.app.$i18n.locale;
+    window.app.$store.dispatch('state/start');
+    return config;
+});
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
+require('axios').interceptors.response.use(function (response) {
+    window.app.$store.dispatch('state/finish');
+    return response;
+}, function (error) {
+    window.app.$store.dispatch('state/finish');
+    return Promise.reject(error);
+});
 
-// const files = require.context('./', true, /\.vue$/i);
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
+const Vue = require('vue');
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+const VueRouter = require('vue-router').default;
+Vue.use(VueRouter);
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+const Vuex = require('vuex').default;
+Vue.use(Vuex);
 
-const app = new Vue({
+const VueI18n = require('vue-i18n').default;
+Vue.use(VueI18n);
+
+const files = require.context('./components', true, /\.vue$/i);
+files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
+
+Vue.mixin(require('./mixins.js'));
+
+window.app = new Vue({
     el: '#app',
+    i18n: new VueI18n({
+        locale: navigator.languages[0].split('-')[0],
+        fallbackLocale: 'en',
+        messages: {
+            en: require('./lang/en.js').default,
+            fr: require('./lang/fr.js').default,
+        },
+    }),
+    router: new VueRouter({
+        linkActiveClass: 'active',
+        routes: require('./routes.js').default,
+    }),
+    store: new Vuex.Store({
+        modules: {
+            currency: {
+                namespaced: true,
+                ...require('./stores/currency.js'),
+            },
+            state: {
+                namespaced: true,
+                ...require('./stores/state.js'),
+            },
+        }
+    }),
+    created() {
+        require('moment').locale(this.$i18n.locale);
+        this.$store.dispatch('currency/refresh');
+    },
 });
