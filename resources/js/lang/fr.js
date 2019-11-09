@@ -8,6 +8,13 @@ export default {
         save: 'Enregistrer',
     },
 
+    account: {
+        name: 'Comptes',
+        all: {
+            name: 'Tous les comptes',
+        },
+    },
+
     icons: {
         link: 'Rechercher une icône (en Anglais)',
         categories: {
