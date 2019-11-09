@@ -10,8 +10,13 @@ export default {
 
     account: {
         name: 'Accounts',
+        attributes: {
+            cumulatedBalance: 'Cumulated balance',
+            monthlyBalance: 'Monthly balance',
+        },
         all: {
             name: 'All accounts',
+            distribution: 'Distribution',
         },
     },
 

@@ -10,8 +10,13 @@ export default {
 
     account: {
         name: 'Comptes',
+        attributes: {
+            cumulatedBalance: 'Solde cumulé',
+            monthlyBalance: 'Solde mensuel',
+        },
         all: {
             name: 'Tous les comptes',
+            distribution: 'Répartition',
         },
     },
 
