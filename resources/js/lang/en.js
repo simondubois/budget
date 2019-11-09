@@ -8,6 +8,13 @@ export default {
         save: 'Save',
     },
 
+    account: {
+        name: 'Accounts',
+        all: {
+            name: 'All accounts',
+        },
+    },
+
     icons: {
         link: 'Search icons',
         categories: {

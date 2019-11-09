@@ -47,6 +47,10 @@ window.app = new Vue({
     }),
     store: new Vuex.Store({
         modules: {
+            account: {
+                namespaced: true,
+                ...require('./stores/account.js'),
+            },
             currency: {
                 namespaced: true,
                 ...require('./stores/currency.js'),
@@ -59,6 +63,7 @@ window.app = new Vue({
     }),
     created() {
         require('moment').locale(this.$i18n.locale);
+        this.$store.dispatch('account/refresh');
         this.$store.dispatch('currency/refresh');
     },
 });
