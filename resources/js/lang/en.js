@@ -78,6 +78,16 @@ export default {
         },
     },
 
+    help: {
+        onboarding: {
+            account: 'Create a bank account.',
+            currency: 'Register a currency.',
+            defaultCurrency: 'Set a default currency.',
+            envelope: 'Create an envelope.',
+            introduction: 'Last steps to setup the application:',
+        },
+    },
+
     history: {
         period: {
             latest: 'Latest',

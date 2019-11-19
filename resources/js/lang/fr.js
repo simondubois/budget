@@ -78,6 +78,16 @@ export default {
         },
     },
 
+    help: {
+        onboarding: {
+            account: 'Créer un compte bancaire.',
+            currency: 'Enregistrer une devise.',
+            defaultCurrency: 'Définir une devise par défaut.',
+            envelope: 'Créer une envelope.',
+            introduction: 'Dernières étapes pour configurer l\'application:',
+        },
+    },
+
     history: {
         period: {
             latest: 'Récent',
