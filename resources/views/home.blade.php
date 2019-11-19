@@ -22,6 +22,13 @@
                 <router-view name="navbar"></router-view>
             </bs-navbar>
 
+            <transition name="fade">
+                <help-onboarding
+                    v-if="loaded"
+                    class="my-4"
+                ></help-onboarding>
+            </transition>
+
             <transition
                 mode="out-in"
                 name="fade"
