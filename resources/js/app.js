@@ -73,10 +73,14 @@ window.app = new Vue({
             },
         }
     }),
+    data: () => ({
+        loaded: false,
+    }),
     created() {
         require('moment').locale(this.$i18n.locale);
-        this.$store.dispatch('account/refresh');
-        this.$store.dispatch('currency/refresh');
-        this.$store.dispatch('envelope/refresh');
+        const accountRefresh = this.$store.dispatch('account/refresh');
+        const currencyRefresh = this.$store.dispatch('currency/refresh');
+        const envelopeRefresh = this.$store.dispatch('envelope/refresh');
+        Promise.all([accountRefresh, currencyRefresh, envelopeRefresh]).then(() => this.loaded = true);
     },
 });
