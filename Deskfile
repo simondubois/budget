@@ -1,0 +1,48 @@
+#/bin/bash
+
+export PATH=$PATH:./vendor/bin:./node_modules/.bin
+export HISTFILE=$HOME/.bash_history_budget
+touch $HISTFILE
+
+function dev-install {
+    # git clone git@github.com:simondubois/budget.git ./
+    composer install
+    cp .env.example .env
+    php artisan key:generate
+    sed -i "" "s/DB_DATABASE=.*/DB_DATABASE=budget/g" .env
+    sed -i "" "s/DB_USERNAME=.*/DB_USERNAME=root/g" .env
+    sed -i "" "s/DB_PASSWORD=.*/DB_PASSWORD=/g" .env
+    dev-migrate
+    npm install
+}
+
+function dev-migrate {
+    mysql -e "DROP DATABASE budget" 2> /dev/null
+    mysql -e "CREATE DATABASE budget"
+    php artisan migrate --seed
+}
+
+function demo-update {
+    ssh $DESK_BUDGET_DEMO_HOST "cd $DESK_BUDGET_DEMO_PATH && git fetch"
+    ssh $DESK_BUDGET_DEMO_HOST "cd $DESK_BUDGET_DEMO_PATH && git reset origin/master --hard"
+    ssh $DESK_BUDGET_DEMO_HOST "cd $DESK_BUDGET_DEMO_PATH && php-7.3 composer install --optimize-autoloader"
+    ssh $DESK_BUDGET_DEMO_HOST "cd $DESK_BUDGET_DEMO_PATH && php-7.3 artisan view:clear"
+    open $DESK_BUDGET_DEMO_URL
+}
+
+function mpl-update {
+    ssh $DESK_BUDGET_MPL_HOST "cd $DESK_BUDGET_MPL_PATH && git fetch"
+    ssh $DESK_BUDGET_MPL_HOST "cd $DESK_BUDGET_MPL_PATH && git reset origin/master --hard"
+    desk_budget_mpl_auth
+    ssh $DESK_BUDGET_MPL_HOST "cd $DESK_BUDGET_MPL_PATH && php-7.3 composer install --optimize-autoloader --no-dev"
+    ssh $DESK_BUDGET_MPL_HOST "cd $DESK_BUDGET_MPL_PATH && php-7.3 artisan view:clear"
+}
+
+function prod-update {
+    ssh $DESK_BUDGET_PROD_HOST "cd $DESK_BUDGET_PROD_PATH && git fetch"
+    ssh $DESK_BUDGET_PROD_HOST "cd $DESK_BUDGET_PROD_PATH && git reset origin/master --hard"
+    desk_budget_prod_auth
+    ssh $DESK_BUDGET_PROD_HOST "cd $DESK_BUDGET_PROD_PATH && php-7.3 composer install --optimize-autoloader --no-dev"
+    ssh $DESK_BUDGET_PROD_HOST "cd $DESK_BUDGET_PROD_PATH && php-7.3 artisan view:clear"
+    open $DESK_BUDGET_PROD_URL
+}
