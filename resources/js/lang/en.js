@@ -179,6 +179,9 @@ export default {
             name: 'New operation',
             emptyToEnvelopeId: 'Not allocated',
         },
+        duplicate: {
+            name: 'Duplicate operation',
+        },
         edit: {
             name: 'Edit operation',
             emptyToEnvelopeId: 'Not allocated',
