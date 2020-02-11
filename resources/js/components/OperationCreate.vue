@@ -240,15 +240,15 @@
 <script>
 
     export default {
-        data: () => ({
+        data: vue => ({
             operation: {
-                type: 'expense',
-                from_account_id: '',
-                to_account_id: '',
-                from_envelope_id: '',
-                to_envelope_id: '',
-                name: '',
-                amount: '',
+                type: vue.$route.query.create_type || 'expense',
+                from_account_id: vue.$route.query.create_from_account_id || '',
+                to_account_id: vue.$route.query.create_to_account_id || '',
+                from_envelope_id: vue.$route.query.create_from_envelope_id || '',
+                to_envelope_id: vue.$route.query.create_to_envelope_id || '',
+                name: vue.$route.query.create_name || '',
+                amount: vue.$route.query.create_amount || '',
                 date: require('moment')().format('YYYY-MM-DD'),
             },
             errors: {},
@@ -256,7 +256,10 @@
         computed: {
             account: vue => vue.$store.getters['account/find'](vue.accountId),
             accountId: vue => vue.operation.from_account_id || vue.operation.to_account_id,
-            closeRoute: vue => ({ name: 'operation-all', query: vue.$route.query }),
+            closeQuery: vue => Object.keys(vue.$route.query)
+                .filter(key => key.startsWith('create_') === false)
+                .reduce((query, key) => ({ ...query, [key]: vue.$route.query[key] }), {}),
+            closeRoute: vue => ({ name: 'operation-all', query: vue.closeQuery }),
             currency: vue => vue.account ? vue.account.currency : undefined,
             currencyUnit: vue => vue.currency ? vue.currency.unit : undefined,
             showFromAccountId: vue => vue.operation.type === 'expense' || vue.operation.type === 'transfer',
