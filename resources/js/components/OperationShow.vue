@@ -79,6 +79,16 @@
             class="align-middle"
         >
             <div class="btn-group">
+
+                <router-link
+                    v-if="duplicateRoute"
+                    :title="$t('operation.duplicate.name')"
+                    :to="duplicateRoute"
+                    class="btn btn-primary btn-sm"
+                >
+                    <fontawesome-icon icon="duplicate" />
+                </router-link>
+
                 <router-link
                     v-if="editRoute"
                     :title="$t('operation.edit.name')"
@@ -87,6 +97,7 @@
                 >
                     <fontawesome-icon icon="edit" />
                 </router-link>
+
             </div>
         </td>
 
@@ -122,6 +133,20 @@
             },
             currency: vue => vue.operation.currency,
             date: vue => vue.operation.date.format('L'),
+            duplicateRoute: vue => vue.type === 'allocation' ? null : ({
+                name: 'operation-create',
+                query: {
+                    ...vue.$route.query,
+                    create_type: vue.operation.type,
+                    create_from_account_id: vue.operation.from_account_id,
+                    create_to_account_id: vue.operation.to_account_id,
+                    create_from_envelope_id: vue.operation.from_envelope_id,
+                    create_to_envelope_id: vue.operation.to_envelope_id,
+                    create_name: vue.operation.name,
+                    create_amount: vue.operation.amount.getNumber(vue.currency),
+                    create_currency: vue.currency,
+                },
+            }),
             editRoute: vue => vue.type === 'allocation' ? null : ({
                 name: 'operation-edit',
                 params: { operationId: vue.operation.id },
