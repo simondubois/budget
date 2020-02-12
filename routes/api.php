@@ -13,6 +13,10 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::apiResource('currencies/history', CurrencyHistoryController::class)
+    ->parameters(['history' => 'toCurrency'])
+    ->only(['show']);
+
 Route::apiResource('currencies', CurrencyController::class)
     ->only(['index', 'show']);
 
