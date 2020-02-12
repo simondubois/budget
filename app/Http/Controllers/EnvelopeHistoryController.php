@@ -62,7 +62,7 @@ class EnvelopeHistoryController extends HistoryController
                 return $envelope->compute('expenses', $min, $max);
             }),
             'incomes' => $dates->mapSpread(function (Carbon $min, Carbon $max) use ($envelope) : Money {
-                return $envelope->compute('directIncomes', $min, $max);
+                return $envelope->compute('incomes', $min, $max);
             }),
             'period_balance' => $dates->mapSpread(function (Carbon $min, Carbon $max) use ($envelope) : Money {
                 return $envelope->compute('balance', $min, $max);
