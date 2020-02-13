@@ -67,6 +67,18 @@
                     </router-link>
                 </li>
 
+                <li class="nav-item">
+                    <router-link
+                        :to="{ name: 'currency-all' }"
+                        class="nav-link"
+                    >
+                        <fontawesome-icon icon="currency" />
+                        <span class="d-none d-sm-inline">
+                            {{ $t('currency.name') }}
+                        </span>
+                    </router-link>
+                </li>
+
                 <li class="nav-item flex-grow-1" />
 
                 <li
