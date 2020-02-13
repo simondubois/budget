@@ -39,6 +39,10 @@ export default {
         name: 'Allocations',
     },
 
+    currency: {
+        name: 'Devises',
+    },
+
     envelope: {
         name: 'Enveloppe',
         attributes: {
