@@ -100,6 +100,12 @@ export default [
         components: { default: require('./components/AllocationAll.vue').default },
     },
     {
+        path: '/currencies',
+        name: 'currency-all',
+        components: { default: require('./components/CurrencyAll.vue').default },
+        meta: { showCurrencySelector: true },
+    },
+    {
         path: '*',
         redirect: '/',
     },
