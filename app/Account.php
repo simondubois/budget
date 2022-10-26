@@ -3,12 +3,15 @@
 namespace App;
 
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Database\Eloquent\Model;
 
 class Account extends Model
 {
     use BelongsToCurrency;
-    use MorphManyAggregates;
+    use MorphManyAggregates {
+        compute as computeTrait;
+    }
 
     /**
      * Operation relations used to calculate aggregates.
@@ -21,6 +24,7 @@ class Account extends Model
         'incomes',
         'incomingTransfers',
         'outgoingTransfers',
+        'balance',
     ];
 
     /**
@@ -96,43 +100,52 @@ class Account extends Model
      * Calculate the account aggregates for the given period.
      *
      * @param string $name
-     * @param Carbon $min
-     * @param Carbon $max
+     * @param CarbonPeriod $period
      * @return Money
      */
-    public function compute(string $name, Carbon $min, Carbon $max) : Money
+    public function compute(string $name, CarbonPeriod $period) : Money
     {
-        if ($name === 'balance') {
-            return Money::sum(collect([
-                $this->computeAggregates('incomes', $min, $max),
-                $this->computeAggregates('expenses', $min, $max)->opposite(),
-                $this->computeAggregates('incomingTransfers', $min, $max),
-                $this->computeAggregates('outgoingTransfers', $min, $max)->opposite(),
-            ]));
-        }
-
-        return $this->computeAggregates($name, $min, $max);
+        return new Money(
+            $this->computeTrait($name, $period)->amounts->get($this->cached_currency->iso),
+            $this->cached_currency,
+            CarbonPeriod::create($period->getEndDate()->copy()->startOfMonth(), $period->getEndDate())
+        );
     }
 
     /**
      * Calculate global account aggregates for the given period.
      *
      * @param string $name
-     * @param Carbon $min
-     * @param Carbon $max
+     * @param CarbonPeriod $period
      * @return Money
      */
-    public static function computeGlobal(string $name, Carbon $min, Carbon $max) : Money
+    public static function computeGlobal(string $name, CarbonPeriod $period) : Money
     {
-        if ($name === 'balance') {
-            return Money::sum(collect([
-                static::computeGlobalAggregates('incomes', $min, $max),
-                static::computeGlobalAggregates('expenses', $min, $max)->opposite(),
-                static::computeGlobalAggregates('incomingTransfers', $min, $max),
-                static::computeGlobalAggregates('outgoingTransfers', $min, $max)->opposite(),
-            ]));
-        }
+        return Money::sum(
+            Account::all()->map(function (Account $account) use ($name, $period) {
+                return $account->compute($name, $period);
+            })
+        );
+    }
 
-        return static::computeGlobalAggregates($name, $min, $max);
+    /**
+     * Calculate the monthly balance for the given currency and date.
+     *
+     * @return float
+     */
+    public function calculateBalanceAggregate(Currency $currency, Carbon $date) : float
+    {
+        $period = [$date->copy()->startOfMonth(), $date->copy()->endOfMonth()];
+
+        return $this->incomes()->where('currency_iso', $currency->iso)->whereBetween('date', $period)->sum('amount')
+            - $this->expenses()->where('currency_iso', $currency->iso)->whereBetween('date', $period)->sum('amount')
+            + $this->incomingTransfers()
+                ->where('currency_iso', $currency->iso)
+                ->whereBetween('date', $period)
+                ->sum('amount')
+            - $this->outgoingTransfers()
+                ->where('currency_iso', $currency->iso)
+                ->whereBetween('date', $period)
+                ->sum('amount');
     }
 }

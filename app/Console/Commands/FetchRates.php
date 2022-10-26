@@ -87,5 +87,4 @@ class FetchRates extends Command
         $this->bar->finish();
         $this->line('');
     }
-
 }

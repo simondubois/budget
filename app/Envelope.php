@@ -19,6 +19,7 @@ class Envelope extends Model
         'allocations',
         'expenses',
         'incomes',
+        'balance',
     ];
 
     /**
@@ -70,44 +71,16 @@ class Envelope extends Model
     }
 
     /**
-     * Calculate the aggregates for the given period.
+     * Calculate the monthly balance for the given currency and date.
      *
-     * @param string $name
-     * @param Carbon $min
-     * @param Carbon $max
-     * @return Money
+     * @return float
      */
-    public function compute(string $name, Carbon $min, Carbon $max) : Money
+    public function calculateBalanceAggregate(Currency $currency, Carbon $date) : float
     {
-        if ($name === 'balance') {
-            return Money::sum(collect([
-                $this->computeAggregates('allocations', $min, $max),
-                $this->computeAggregates('expenses', $min, $max)->opposite(),
-                $this->computeAggregates('incomes', $min, $max),
-            ]));
-        }
+        $period = [$date->copy()->startOfMonth(), $date->copy()->endOfMonth()];
 
-        return $this->computeAggregates($name, $min, $max);
-    }
-
-    /**
-     * Calculate global envelope aggregates for the given period.
-     *
-     * @param string $name
-     * @param Carbon $min
-     * @param Carbon $max
-     * @return Money
-     */
-    public static function computeGlobal(string $name, Carbon $min, Carbon $max) : Money
-    {
-        if ($name === 'balance') {
-            return Money::sum(collect([
-                static::computeGlobalAggregates('allocations', $min, $max),
-                static::computeGlobalAggregates('expenses', $min, $max)->opposite(),
-                static::computeGlobalAggregates('incomes', $min, $max),
-            ]));
-        }
-
-        return static::computeGlobalAggregates($name, $min, $max);
+        return $this->allocations()->where('currency_iso', $currency->iso)->whereBetween('date', $period)->sum('amount')
+            - $this->expenses()->where('currency_iso', $currency->iso)->whereBetween('date', $period)->sum('amount')
+            + $this->incomes()->where('currency_iso', $currency->iso)->whereBetween('date', $period)->sum('amount');
     }
 }

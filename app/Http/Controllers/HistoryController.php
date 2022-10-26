@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\MoneyResource;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Support\Collection;
 
 abstract class HistoryController extends Controller
@@ -14,22 +15,22 @@ abstract class HistoryController extends Controller
      * @param  Collection  $dates
      * @return Collection
      */
-    protected function computeDates(Collection $dates) : Collection
+    protected function computePeriods(Collection $dates) : Collection
     {
         return $dates
             ->combine($dates)
-            ->map(function (string $date) : array {
+            ->map(function (string $date) : CarbonPeriod {
                 $dateParts = explode('-', $date);
                 if (count($dateParts) === 1) {
-                    return [
+                    return CarbonPeriod::create(
                         Carbon::create($dateParts[0])->startOf('year'),
                         Carbon::create($dateParts[0])->endOf('year'),
-                    ];
+                    );
                 }
-                return [
+                return CarbonPeriod::create(
                     Carbon::create($dateParts[0], $dateParts[1])->startOf('month'),
                     Carbon::create($dateParts[0], $dateParts[1])->endOf('month'),
-                ];
+                );
             });
     }
 

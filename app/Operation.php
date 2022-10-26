@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -99,7 +99,11 @@ class Operation extends Model
      */
     public function getAmountAttribute(float $amount) : Money
     {
-        return new Money($amount, $this->cached_currency, $this->date);
+        return new Money(
+            $amount,
+            $this->cached_currency,
+            CarbonPeriod::create($this->date->copy()->startOfMonth(), $this->date->copy()->endOfMonth())
+        );
     }
 
     /**

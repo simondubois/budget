@@ -33,6 +33,11 @@ return [
 
     'stores' => [
 
+        'aggregate' => [
+            'driver' => 'file',
+            'path' => storage_path('framework/cache/data'),
+        ],
+
         'apc' => [
             'driver' => 'apc',
         ],
