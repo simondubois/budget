@@ -3,7 +3,9 @@
 namespace App;
 
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 trait MorphManyAggregates
 {
@@ -24,80 +26,92 @@ trait MorphManyAggregates
     {
         Currency::fromCache()
             ->crossJoin($this->aggregateNames)
-            ->mapSpread(function (Currency $currency, string $name) use ($date) : array {
-                return [
-                    $this->aggregates()->firstOrNew([
+            ->mapSpread(function (Currency $currency, string $name) use ($date) : Aggregate {
+                return $this->aggregates()
+                    ->firstOrNew([
                         'currency_iso' => $currency->iso,
                         'name' => $name,
                         'date' => $date->copy()->startOfMonth(),
-                    ]),
-                    $this->$name()
-                        ->where('currency_iso', $currency->iso)
-                        ->whereBetween('date', [$date->copy()->startOfMonth(), $date->copy()->endOfMonth()])
-                        ->sum('amount'),
-                ];
+                    ])
+                    ->fill([
+                        'amount' => round(
+                            $name === 'balance'
+                                ? $this->calculateBalanceAggregate($currency, $date)
+                                : $this->$name()
+                                    ->where('currency_iso', $currency->iso)
+                                    ->whereBetween('date', [$date->copy()->startOfMonth(), $date->copy()->endOfMonth()])
+                                    ->sum('amount'),
+                            2
+                        ),
+                    ]);
             })
-            ->eachSpread(function (Aggregate $aggregate, float $amount) : void {
-                if (round($amount, 2) === 0.00) {
+            ->each(function (Aggregate $aggregate) : void {
+                if ($aggregate->amount === 0.00) {
                     $aggregate->delete();
                     return;
                 }
-                $aggregate->fill(['amount' => $amount])->save();
+                $aggregate->save();
             });
+
+        Cache::store('aggregate')->flush();
     }
 
     /**
      * Calculate the sum of related aggregates for the given period.
      *
      * @param string $name
-     * @param Carbon $min
-     * @param Carbon $max
+     * @param CarbonPeriod $period
      * @return Money
      */
-    protected function computeAggregates(string $name, Carbon $min, Carbon $max) : Money
+    public function compute(string $name, CarbonPeriod $period) : Money
     {
-        return Currency::fromCache()
-            ->map(function (Currency $currency) use ($name, $min, $max) : Money {
-                return new Money(
-                    $this->aggregates()
-                        ->where('currency_iso', $currency->iso)
-                        ->where('name', $name)
-                        ->whereBetween('date', [$min, $max])
-                        ->sum('amount') ?? 0,
-                    $currency,
-                    Carbon::today()
+        return Cache::store('aggregate')->remember(
+            __CLASS__ . "-$this->id-$name-" . $period->getStartDate() . '-' . $period->getEndDate(),
+            Carbon::MINUTES_PER_HOUR * Carbon::HOURS_PER_DAY,
+            function () use ($name, $period) {
+                return Money::sum(
+                    Currency::fromCache()->flatMap(function (Currency $currency) use ($name, $period) : Collection {
+                        return $this->aggregates()
+                            ->selectRaw('SUM(amount) AS amount, date, currency_iso')
+                            ->where('currency_iso', $currency->iso)
+                            ->where('name', $name)
+                            ->whereBetween('date', [$period->getStartDate(), $period->getEndDate()])
+                            ->groupBy('date', 'currency_iso')
+                            ->get()
+                            ->pluck('amount_as_money');
+                    })
                 );
-            })
-            ->pipe(function (Collection $monies) : Money {
-                return Money::sum($monies);
-            });
+            }
+        );
     }
 
     /**
      * Calculate the sum of global aggregates for the given period.
      *
      * @param string $name
-     * @param Carbon $min
-     * @param Carbon $max
+     * @param CarbonPeriod $period
      * @return Money
      */
-    protected static function computeGlobalAggregates(string $name, Carbon $min, Carbon $max) : Money
+    public static function computeGlobal(string $name, CarbonPeriod $period) : Money
     {
-        return Currency::fromCache()
-            ->map(function (Currency $currency) use ($name, $min, $max) : Money {
-                return new Money(
-                    Aggregate::query()
-                        ->where('aggregatable_type', __CLASS__)
-                        ->where('currency_iso', $currency->iso)
-                        ->where('name', $name)
-                        ->whereBetween('date', [$min, $max])
-                        ->sum('amount') ?? 0,
-                    $currency,
-                    Carbon::today()
+        return Cache::store('aggregate')->remember(
+            __CLASS__ . "-$name-" . $period->getStartDate() . '-' . $period->getEndDate(),
+            Carbon::MINUTES_PER_HOUR * Carbon::HOURS_PER_DAY,
+            function () use ($name, $period) {
+                return Money::sum(
+                    Currency::fromCache()->flatMap(function (Currency $currency) use ($name, $period) : Collection {
+                        return Aggregate::query()
+                            ->where('aggregatable_type', __CLASS__)
+                            ->selectRaw('SUM(amount) AS amount, date, currency_iso')
+                            ->where('currency_iso', $currency->iso)
+                            ->where('name', $name)
+                            ->whereBetween('date', [$period->getStartDate(), $period->getEndDate()])
+                            ->groupBy('date', 'currency_iso')
+                            ->get()
+                            ->pluck('amount_as_money');
+                    })
                 );
-            })
-            ->pipe(function (Collection $monies) : Money {
-                return Money::sum($monies);
-            });
+            }
+        );
     }
 }

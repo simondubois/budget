@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Envelope;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class EnvelopeCollection extends ResourceCollection
@@ -28,22 +29,43 @@ class EnvelopeCollection extends ResourceCollection
             'data' => $this->collection,
             'aggregates' => [
                 'cumulated_balance' => new MoneyResource(
-                    Envelope::computeGlobal('balance', Carbon::minValue(), Carbon::today())
+                    Envelope::computeGlobal(
+                        'balance',
+                        CarbonPeriod::create(Carbon::minValue(), Carbon::today()->endOfMonth())
+                    )
                 ),
                 'monthly_allocations' => new MoneyResource(
-                    Envelope::computeGlobal('allocations', Carbon::today()->startOfMonth(), Carbon::today())
+                    Envelope::computeGlobal(
+                        'allocations',
+                        CarbonPeriod::create(Carbon::today()->startOfMonth(), Carbon::today()->endOfMonth())
+                    )
                 ),
                 'monthly_balance' => new MoneyResource(
-                    Envelope::computeGlobal('balance', Carbon::today()->startOfMonth(), Carbon::today())
+                    Envelope::computeGlobal(
+                        'balance',
+                        CarbonPeriod::create(Carbon::today()->startOfMonth(), Carbon::today()->endOfMonth())
+                    )
                 ),
                 'monthly_expenses' => new MoneyResource(
-                    Envelope::computeGlobal('expenses', Carbon::today()->startOfMonth(), Carbon::today())
+                    Envelope::computeGlobal(
+                        'expenses',
+                        CarbonPeriod::create(Carbon::today()->startOfMonth(), Carbon::today()->endOfMonth())
+                    )
                 ),
                 'monthly_incomes' => new MoneyResource(
-                    Envelope::computeGlobal('incomes', Carbon::today()->startOfMonth(), Carbon::today())
+                    Envelope::computeGlobal(
+                        'incomes',
+                        CarbonPeriod::create(Carbon::today()->startOfMonth(), Carbon::today()->endOfMonth())
+                    )
                 ),
                 'previous_cumulated_balance' => new MoneyResource(
-                    Envelope::computeGlobal('balance', Carbon::minValue(), Carbon::today()->startOfMonth()->subMonth()->endOfMonth())
+                    Envelope::computeGlobal(
+                        'balance',
+                        CarbonPeriod::create(
+                            Carbon::minValue(),
+                            Carbon::today()->startOfMonth()->subMonth()->endOfMonth()
+                        )
+                    )
                 ),
             ],
         ];

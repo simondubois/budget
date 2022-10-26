@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Account;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class AccountCollection extends ResourceCollection
@@ -28,10 +29,16 @@ class AccountCollection extends ResourceCollection
             'data' => $this->collection,
             'aggregates' => [
                 'cumulated_balance' => new MoneyResource(
-                    Account::computeGlobal('balance', Carbon::minValue(), Carbon::today())
+                    Account::computeGlobal(
+                        'balance',
+                        CarbonPeriod::create(Carbon::minValue(), Carbon::today()->endOfMonth())
+                    )
                 ),
                 'monthly_balance' => new MoneyResource(
-                    Account::computeGlobal('balance', Carbon::today()->startOfMonth(), Carbon::today())
+                    Account::computeGlobal(
+                        'balance',
+                        CarbonPeriod::create(Carbon::today()->startOfMonth(), Carbon::today()->endOfMonth())
+                    )
                 ),
             ],
         ];

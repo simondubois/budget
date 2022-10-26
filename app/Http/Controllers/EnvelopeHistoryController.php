@@ -6,6 +6,7 @@ use App\Envelope;
 use App\Http\Resources\MoneyResource;
 use App\Money;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
@@ -19,23 +20,26 @@ class EnvelopeHistoryController extends HistoryController
      */
     public function index(Request $request)
     {
-        $dates = $this->computeDates(collect($request->dates));
+        $periods = $this->computePeriods(collect($request->dates));
 
         return $this->formatResponse([
-            'allocations' => $dates->mapSpread(function (Carbon $min, Carbon $max) : Money {
-                return Envelope::computeGlobal('allocations', $min, $max);
+            'allocations' => $periods->map(function (CarbonPeriod $period) : Money {
+                return Envelope::computeGlobal('allocations', $period);
             }),
-            'cumulated_balance' => $dates->mapSpread(function (Carbon $min, Carbon $max) : Money {
-                return Envelope::computeGlobal('balance', Carbon::minValue(), $max);
+            'cumulated_balance' => $periods->map(function (CarbonPeriod $period) : Money {
+                return Envelope::computeGlobal(
+                    'balance',
+                    CarbonPeriod::create(Carbon::minValue(), $period->getEndDate())
+                );
             }),
-            'expenses' => $dates->mapSpread(function (Carbon $min, Carbon $max) : Money {
-                return Envelope::computeGlobal('expenses', $min, $max);
+            'expenses' => $periods->map(function (CarbonPeriod $period) : Money {
+                return Envelope::computeGlobal('expenses', $period);
             }),
-            'incomes' => $dates->mapSpread(function (Carbon $min, Carbon $max) : Money {
-                return Envelope::computeGlobal('incomes', $min, $max);
+            'incomes' => $periods->map(function (CarbonPeriod $period) : Money {
+                return Envelope::computeGlobal('incomes', $period);
             }),
-            'period_balance' => $dates->mapSpread(function (Carbon $min, Carbon $max) : Money {
-                return Envelope::computeGlobal('balance', $min, $max);
+            'period_balance' => $periods->map(function (CarbonPeriod $period) : Money {
+                return Envelope::computeGlobal('balance', $period);
             }),
         ]);
     }
@@ -49,23 +53,23 @@ class EnvelopeHistoryController extends HistoryController
      */
     public function show(Request $request, Envelope $envelope)
     {
-        $dates = $this->computeDates(collect($request->dates));
+        $periods = $this->computePeriods(collect($request->dates));
 
         return $this->formatResponse([
-            'allocations' => $dates->mapSpread(function (Carbon $min, Carbon $max) use ($envelope) : Money {
-                return $envelope->compute('allocations', $min, $max);
+            'allocations' => $periods->map(function (CarbonPeriod $period) use ($envelope) : Money {
+                return $envelope->compute('allocations', $period);
             }),
-            'cumulated_balance' => $dates->mapSpread(function (Carbon $min, Carbon $max) use ($envelope) : Money {
-                return $envelope->compute('balance', Carbon::minValue(), $max);
+            'cumulated_balance' => $periods->map(function (CarbonPeriod $period) use ($envelope) : Money {
+                return $envelope->compute('balance', CarbonPeriod::create(Carbon::minValue(), $period->getEndDate()));
             }),
-            'expenses' => $dates->mapSpread(function (Carbon $min, Carbon $max) use ($envelope) : Money {
-                return $envelope->compute('expenses', $min, $max);
+            'expenses' => $periods->map(function (CarbonPeriod $period) use ($envelope) : Money {
+                return $envelope->compute('expenses', $period);
             }),
-            'incomes' => $dates->mapSpread(function (Carbon $min, Carbon $max) use ($envelope) : Money {
-                return $envelope->compute('incomes', $min, $max);
+            'incomes' => $periods->map(function (CarbonPeriod $period) use ($envelope) : Money {
+                return $envelope->compute('incomes', $period);
             }),
-            'period_balance' => $dates->mapSpread(function (Carbon $min, Carbon $max) use ($envelope) : Money {
-                return $envelope->compute('balance', $min, $max);
+            'period_balance' => $periods->map(function (CarbonPeriod $period) use ($envelope) : Money {
+                return $envelope->compute('balance', $period);
             }),
         ]);
     }

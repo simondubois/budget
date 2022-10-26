@@ -6,6 +6,7 @@ use App\Account;
 use App\Envelope;
 use App\Money;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 
 class AccountHistoryController extends HistoryController
@@ -18,34 +19,43 @@ class AccountHistoryController extends HistoryController
      */
     public function index(Request $request)
     {
-        $dates = $this->computeDates(collect($request->dates));
+        $periods = $this->computePeriods(collect($request->dates));
 
         return $this->formatResponse([
-            'allocations' => $dates->mapSpread(function (Carbon $min, Carbon $max) : Money {
-                return Envelope::computeGlobal('allocations', $min, $max);
+            'allocations' => $periods->map(function (CarbonPeriod $period) : Money {
+                return Envelope::computeGlobal('allocations', $period);
             }),
-            'cumulated_balance' => $dates->mapSpread(function (Carbon $min, Carbon $max) : Money {
-                return Account::computeGlobal('balance', Carbon::minValue(), $max);
+            'cumulated_balance' => $periods->map(function (CarbonPeriod $period) : Money {
+                return Account::computeGlobal(
+                    'balance',
+                    CarbonPeriod::create(Carbon::minValue(), $period->getEndDate())
+                );
             }),
-            'cumulated_savings' => $dates->mapSpread(function (Carbon $min, Carbon $max) : Money {
+            'cumulated_savings' => $periods->map(function (CarbonPeriod $period) : Money {
                 return Money::sum(collect([
-                    Account::computeGlobal('directIncomes', Carbon::minValue(), $max),
-                    Envelope::computeGlobal('allocations', Carbon::minValue(), $max)->opposite()
+                    Account::computeGlobal(
+                        'balance',
+                        CarbonPeriod::create(Carbon::minValue(), $period->getEndDate())
+                    ),
+                    Envelope::computeGlobal(
+                        'balance',
+                        CarbonPeriod::create(Carbon::minValue(), $period->getEndDate())
+                    )->opposite()
                 ]));
             }),
-            'expenses' => $dates->mapSpread(function (Carbon $min, Carbon $max) : Money {
-                return Account::computeGlobal('expenses', $min, $max);
+            'expenses' => $periods->map(function (CarbonPeriod $period) : Money {
+                return Account::computeGlobal('expenses', $period);
             }),
-            'incomes' => $dates->mapSpread(function (Carbon $min, Carbon $max) : Money {
-                return Account::computeGlobal('directIncomes', $min, $max);
+            'incomes' => $periods->map(function (CarbonPeriod $period) : Money {
+                return Account::computeGlobal('directIncomes', $period);
             }),
-            'period_balance' => $dates->mapSpread(function (Carbon $min, Carbon $max) : Money {
-                return Account::computeGlobal('balance', $min, $max);
+            'period_balance' => $periods->map(function (CarbonPeriod $period) : Money {
+                return Account::computeGlobal('balance', $period);
             }),
-            'period_savings' => $dates->mapSpread(function (Carbon $min, Carbon $max) : Money {
+            'period_savings' => $periods->map(function (CarbonPeriod $period) : Money {
                 return Money::sum(collect([
-                    Account::computeGlobal('directIncomes', $min, $max),
-                    Envelope::computeGlobal('allocations', $min, $max)->opposite()
+                    Account::computeGlobal('balance', $period),
+                    Envelope::computeGlobal('balance', $period)->opposite()
                 ]));
             }),
         ]);
@@ -60,26 +70,26 @@ class AccountHistoryController extends HistoryController
      */
     public function show(Request $request, Account $account)
     {
-        $dates = $this->computeDates(collect($request->dates));
+        $periods = $this->computePeriods(collect($request->dates));
 
         return $this->formatResponse([
-            'cumulated_balance' => $dates->mapSpread(function (Carbon $min, Carbon $max) use ($account) : Money {
-                return $account->compute('balance', Carbon::minValue(), $max);
+            'cumulated_balance' => $periods->map(function (CarbonPeriod $period) use ($account) : Money {
+                return $account->compute('balance', CarbonPeriod::create(Carbon::minValue(), $period->getEndDate()));
             }),
-            'expenses' => $dates->mapSpread(function (Carbon $min, Carbon $max) use ($account) : Money {
-                return $account->compute('expenses', $min, $max);
+            'expenses' => $periods->map(function (CarbonPeriod $period) use ($account) : Money {
+                return $account->compute('expenses', $period);
             }),
-            'incomes' => $dates->mapSpread(function (Carbon $min, Carbon $max) use ($account) : Money {
-                return $account->compute('directIncomes', $min, $max);
+            'incomes' => $periods->map(function (CarbonPeriod $period) use ($account) : Money {
+                return $account->compute('directIncomes', $period);
             }),
-            'incomingTransfers' => $dates->mapSpread(function (Carbon $min, Carbon $max) use ($account) : Money {
-                return $account->compute('incomingTransfers', $min, $max);
+            'incomingTransfers' => $periods->map(function (CarbonPeriod $period) use ($account) : Money {
+                return $account->compute('incomingTransfers', $period);
             }),
-            'outgoingTransfers' => $dates->mapSpread(function (Carbon $min, Carbon $max) use ($account) : Money {
-                return $account->compute('outgoingTransfers', $min, $max);
+            'outgoingTransfers' => $periods->map(function (CarbonPeriod $period) use ($account) : Money {
+                return $account->compute('outgoingTransfers', $period);
             }),
-            'period_balance' => $dates->mapSpread(function (Carbon $min, Carbon $max) use ($account) : Money {
-                return $account->compute('balance', $min, $max);
+            'period_balance' => $periods->map(function (CarbonPeriod $period) use ($account) : Money {
+                return $account->compute('balance', $period);
             }),
         ]);
     }
